@@ -7,11 +7,30 @@ import { CircularGauge } from '../components/CircularGauge'
 import { SectionCard } from '../components/SectionCard'
 import { TabSwitcher } from '../components/TabSwitcher'
 
+const generateData = (range) => {
+  if (range === '6h') {
+    return Array.from({ length: 24 }, (_, i) => ({
+      hour: `${Math.floor(i / 4)}:${(i % 4) * 15}`,
+      usage: Math.floor(Math.random() * 200 + 250),
+    }))
+  }
+  if (range === '24h') {
+    return Array.from({ length: 24 }, (_, i) => ({
+      hour: `${i}:00`,
+      usage: Math.floor(Math.random() * 200 + 250),
+    }))
+  }
+  return Array.from({ length: 30 }, (_, i) => ({
+    hour: `${i + 1}日`,
+    usage: Math.floor(Math.random() * 200 + 250),
+  }))
+}
+
 export default function Power() {
   const sys = useSystem()
   const { powerStatus } = sys
-  const [graphRange, setGraphRange] = useState('24h')
-  const historyData = Array.from({ length: graphRange === '24h' ? 24 : 30 }, (_, i) => ({ hour: graphRange === '24h' ? `${i}:00` : `${i + 1}日`, usage: Math.floor(Math.random() * 200 + 250) }))
+  const [graphRange, setGraphRange] = useState('6h')
+  const historyData = generateData(graphRange)
 
   return (
     <div className="space-y-6">
@@ -49,23 +68,31 @@ export default function Power() {
       </div>
       <SectionCard title="電力グラフ" icon={BarChart3}>
         <div className="flex justify-between items-center mb-4">
-          <TabSwitcher tabs={[{ value: '24h', label: '24時間' }, { value: '30d', label: '30日' }]} active={graphRange} onChange={setGraphRange} />
+          <TabSwitcher tabs={[
+            { value: '6h', label: '6時間' },
+            { value: '24h', label: '24時間' },
+            { value: '30d', label: '30日' },
+          ]} active={graphRange} onChange={setGraphRange} />
         </div>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
-            {graphRange === '24h' ? (
-              <AreaChart data={historyData}>
-                <defs><linearGradient id="cp" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3} /><stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} /></linearGradient></defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" /><XAxis dataKey="hour" stroke="#64748b" fontSize={11} /><YAxis stroke="#64748b" fontSize={11} />
-                <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px' }} />
-                <Area type="monotone" dataKey="usage" stroke="#0ea5e9" fillOpacity={1} fill="url(#cp)" strokeWidth={2} />
-              </AreaChart>
-            ) : (
+            {graphRange === '30d' ? (
               <BarChart data={historyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" /><XAxis dataKey="hour" stroke="#64748b" fontSize={11} /><YAxis stroke="#64748b" fontSize={11} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                <XAxis dataKey="hour" stroke="#64748b" fontSize={11} />
+                <YAxis stroke="#64748b" fontSize={11} />
                 <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px' }} />
                 <Bar dataKey="usage" fill="#0ea5e9" radius={[4, 4, 0, 0]} />
               </BarChart>
+            ) : (
+              <AreaChart data={historyData}>
+                <defs><linearGradient id="cp" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3} /><stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} /></linearGradient></defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                <XAxis dataKey="hour" stroke="#64748b" fontSize={11} />
+                <YAxis stroke="#64748b" fontSize={11} />
+                <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px' }} />
+                <Area type="monotone" dataKey="usage" stroke="#0ea5e9" fillOpacity={1} fill="url(#cp)" strokeWidth={2} />
+              </AreaChart>
             )}
           </ResponsiveContainer>
         </div>
