@@ -32,8 +32,8 @@ function Sidebar({ open, onClose }) {
       <aside className={`fixed top-0 left-0 h-full w-64 bg-bg-card border-r border-border z-50 transform transition-transform duration-300 ${open ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:z-0`}>
         <div className="p-5 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <Brain size={22} className="text-white" />
+            <div className="w-9 h-9 rounded-md bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              <Brain size={18} className="text-white" />
             </div>
             <div>
               <div className="text-lg font-bold text-text-primary">唯希邸 AI</div>
@@ -44,7 +44,7 @@ function Sidebar({ open, onClose }) {
         <nav className="p-3 space-y-1">
           {navItems.map((item) => (
             <NavLink key={item.path} to={item.path} end={item.path === '/'} onClick={onClose}
-              className={({ isActive }) => `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group ${isActive ? 'bg-primary/10 text-primary border border-primary/20' : 'text-text-secondary hover:bg-bg-card-hover hover:text-text-primary border border-transparent'}`}>
+              className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 group ${isActive ? 'bg-primary/10 text-primary border border-primary/20' : 'text-text-secondary hover:bg-bg-card-hover hover:text-text-primary border border-transparent'}`}>
               <item.icon size={18} className="shrink-0" />
               <span className="flex-1">{item.label}</span>
               <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />

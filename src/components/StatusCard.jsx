@@ -17,13 +17,15 @@ export function StatusCard({ title, value, subtitle, icon: Icon, color = 'primar
   }
 
   return (
-    <div className={`rounded-xl border p-4 transition-all duration-300 hover:scale-[1.02] card-glow ${colorMap[color]} ${className}`}>
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-sm text-text-secondary">{title}</span>
-        {Icon && <Icon size={20} className={iconColorMap[color]} />}
+    <div className={`rounded-lg border p-3 transition-all hover:bg-bg-card-hover/30 ${colorMap[color]} ${className}`}>
+      <div className="flex items-center gap-2">
+        {Icon && <Icon size={16} className={iconColorMap[color]} />}
+        <span className="text-xs text-text-secondary">{title}</span>
       </div>
-      <div className={`text-2xl font-bold ${iconColorMap[color]}`}>{value}</div>
-      {subtitle && <div className="text-xs text-text-muted mt-1">{subtitle}</div>}
+      <div className="flex items-baseline justify-between mt-1">
+        <div className={`text-xl font-bold ${iconColorMap[color]}`}>{value}</div>
+        {subtitle && <div className="text-[10px] text-text-muted">{subtitle}</div>}
+      </div>
     </div>
   )
 }
