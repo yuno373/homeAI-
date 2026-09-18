@@ -1,0 +1,110 @@
+import { useState } from 'react'
+import { useSystem } from '../App'
+import { Brain, Eye, Mic, Zap, Home, Clock, CheckCircle, Radio } from 'lucide-react'
+import { SectionCard } from '../components/SectionCard'
+import { TabSwitcher } from '../components/TabSwitcher'
+
+const systems = [
+  { id: 'llama', name: '司令官', model: 'Llama 3.1 70B', icon: Brain, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/30', desc: '家全体の統合判断を担当。', caps: ['全館制御', '判断・意思決定', '異常検知統合', 'ユーザー対話'] },
+  { id: 'yolo', name: '監視AI', model: 'YOLOv8', icon: Eye, color: 'text-danger', bg: 'bg-danger/10', border: 'border-danger/30', desc: 'カメラ映像から人物・動物を検知。', caps: ['人物検知', '動物検知', '不審者識別', '異常行動検知'] },
+  { id: 'whisper', name: '音声AI', model: 'Whisper', icon: Mic, color: 'text-secondary', bg: 'bg-secondary/10', border: 'border-secondary/30', desc: '音声コマンドを認識・処理。', caps: ['音声認識', '自然言語処理', 'コマンド実行', '応答生成'] },
+  { id: 'power-ai', name: '電力AI', model: 'Python ML', icon: Zap, color: 'text-warning', bg: 'bg-warning/10', border: 'border-warning/30', desc: '電力使用量を予測・最適化。', caps: ['電力予測', '消費最適化', '停電対応', 'ソーラー管理'] },
+  { id: 'ha', name: '設備AI', model: 'Home Assistant', icon: Home, color: 'text-success', bg: 'bg-success/10', border: 'border-success/30', desc: '全デバイスの接続・制御を管理。', caps: ['デバイス管理', 'オートメーション', 'スケジュール', '相互接続'] },
+]
+
+export default function AiCenter() {
+  const sys = useSystem()
+  const { voiceHistory, aiDecisions, handleVoice } = sys
+  const [viewMode, setViewMode] = useState('overview')
+  const [voiceInput, setVoiceInput] = useState('')
+
+  const handleVoiceSubmit = () => {
+    if (!voiceInput.trim()) return
+    handleVoice(voiceInput)
+    setVoiceInput('')
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div><h1 className="text-2xl font-bold">AI司令室</h1><p className="text-text-muted text-sm">5つのAIシステムが唯希邸を統合管理</p></div>
+        <TabSwitcher tabs={[{ value: 'overview', label: '一覧' }, { value: 'detail', label: '詳細' }, { value: 'voice', label: '音声' }, { value: 'log', label: 'ログ' }]} active={viewMode} onChange={setViewMode} />
+      </div>
+      <div className="grid grid-cols-5 gap-2">
+        {systems.map((s) => (
+          <div key={s.id} onClick={() => setViewMode('detail')} className={`p-3 rounded-xl border cursor-pointer transition-all ${s.bg} ${s.border}`}>
+            <div className="flex items-center gap-2 mb-2"><s.icon size={16} className={s.color} /><div className="w-2 h-2 rounded-full bg-success animate-pulse" /></div>
+            <div className="text-xs font-bold text-text-primary">{s.name}</div>
+            <div className="text-[10px] text-text-muted">{s.model}</div>
+          </div>
+        ))}
+      </div>
+      {viewMode === 'overview' && (
+        <SectionCard title="全体の接続図" icon={Radio}>
+          <div className="flex items-center justify-center gap-4 py-6">
+            <div className="text-center p-4 rounded-xl bg-primary/10 border border-primary/30"><Brain size={32} className="mx-auto mb-2 text-primary" /><div className="text-sm font-bold">司令官</div><div className="text-[10px] text-text-muted">Llama 3.1 70B</div></div>
+            <div className="text-2xl text-text-muted">→</div>
+            <div className="grid grid-cols-2 gap-2">
+              {systems.filter(s => s.id !== 'llama').map((s) => (
+                <div key={s.id} className={`p-3 rounded-lg ${s.bg} border ${s.border}`}><s.icon size={16} className={`${s.color} mx-auto`} /><div className="text-[10px] text-center mt-1">{s.name}</div></div>
+              ))}
+            </div>
+          </div>
+        </SectionCard>
+      )}
+      {viewMode === 'detail' && (
+        <div className="space-y-4">
+          {systems.map((s) => (
+            <SectionCard key={s.id} title={`${s.name} - ${s.model}`} icon={s.icon}>
+              <p className="text-sm text-text-secondary mb-3">{s.desc}</p>
+              <div className="flex flex-wrap gap-2">{s.caps.map(c => <span key={c} className={`px-2 py-1 rounded text-xs font-medium ${s.bg} ${s.color}`}>{c}</span>)}</div>
+            </SectionCard>
+          ))}
+        </div>
+      )}
+      {viewMode === 'voice' && (
+        <SectionCard title="音声コマンド（Whisper → Llama → DAL）" icon={Mic}>
+          <div className="space-y-4">
+            <div className="p-6 rounded-xl border border-border bg-bg-dark/50 text-center">
+              <div className="text-5xl mb-4">🎙️</div>
+              <div className="text-lg text-text-primary mb-2">音声コマンドを入力</div>
+              <div className="text-sm text-text-secondary mb-4">司令官がすべてのAIシステムを統合して対応</div>
+              <div className="flex gap-2 max-w-lg mx-auto">
+                <input type="text" value={voiceInput} onChange={(e) => setVoiceInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleVoiceSubmit()}
+                  placeholder='「劇場つけて」「UPS残量教えて」'
+                  className="flex-1 px-4 py-3 rounded-lg bg-bg-card border border-border text-text-primary placeholder-text-muted focus:outline-none focus:border-primary text-sm" />
+                <button onClick={handleVoiceSubmit} className="px-4 py-3 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary-dark transition">送信</button>
+              </div>
+            </div>
+            {voiceHistory.length > 0 && (
+              <div className="space-y-2">{voiceHistory.map((h, i) => (
+                <div key={i} className="p-3 rounded-lg bg-bg-dark/50">
+                  <div className="text-xs text-text-muted">{h.time}</div>
+                  <div className="text-sm text-primary">「{h.text}」</div>
+                  <div className="text-sm text-text-primary mt-1">{h.response}</div>
+                </div>
+              ))}</div>
+            )}
+          </div>
+        </SectionCard>
+      )}
+      {viewMode === 'log' && (
+        <SectionCard title="AI判断ログ" icon={Clock}>
+          <div className="space-y-2 max-h-96 overflow-y-auto">
+            {aiDecisions.map((d) => (
+              <div key={d.id} className="p-3 rounded-lg bg-bg-dark/50">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-text-muted">{new Date(d.timestamp).toLocaleTimeString('ja-JP')}</span>
+                  <span className="text-xs text-primary">{Math.round(d.confidence * 100)}%</span>
+                </div>
+                <div className="text-sm text-text-primary">{d.input}</div>
+                <div className="text-xs text-text-muted mt-1">{d.reasoning}</div>
+                <div className="text-xs text-success mt-1">{d.result}</div>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+      )}
+    </div>
+  )
+}
