@@ -1,10 +1,10 @@
 export function SectionCard({ title, icon: Icon, children, className = '' }) {
   return (
-    <div className={`rounded-lg border border-border bg-bg-card p-4 ${className}`}>
+    <div className={`rounded-md border border-border bg-bg-card p-3 ${className}`}>
       {title && (
-        <div className="flex items-center gap-2 mb-3">
-          {Icon && <Icon size={16} className="text-primary" />}
-          <h3 className="text-xs font-semibold text-text-primary uppercase tracking-wider">{title}</h3>
+        <div className="flex items-center gap-1.5 mb-2">
+          {Icon && <Icon size={13} className="text-primary" />}
+          <h3 className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">{title}</h3>
         </div>
       )}
       {children}

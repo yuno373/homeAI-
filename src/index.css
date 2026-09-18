@@ -51,24 +51,6 @@ body {
   background: var(--color-text-muted);
 }
 
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 3px currentColor; }
-  50% { box-shadow: 0 0 8px currentColor; }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-@keyframes scan-line {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
-}
-
-.animate-scan {
-  animation: scan-line 3s linear infinite;
-}
-
 .gauge-circle {
   transition: stroke-dashoffset 1s ease-in-out;
 }
@@ -90,8 +72,4 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   background: var(--color-primary);
   cursor: pointer;
-}
-
-.card-glow:hover {
-  box-shadow: 0 1px 4px rgba(14, 165, 233, 0.12);
 }
