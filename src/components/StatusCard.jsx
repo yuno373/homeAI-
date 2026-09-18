@@ -17,14 +17,14 @@ export function StatusCard({ title, value, subtitle, icon: Icon, color = 'primar
   }
 
   return (
-    <div className={`rounded-lg border p-3 transition-all hover:bg-bg-card-hover/30 ${colorMap[color]} ${className}`}>
-      <div className="flex items-center gap-2">
-        {Icon && <Icon size={16} className={iconColorMap[color]} />}
-        <span className="text-xs text-text-secondary">{title}</span>
+    <div className={`rounded-md border p-2 transition-all hover:bg-bg-card-hover/30 ${colorMap[color]} ${className}`}>
+      <div className="flex items-center gap-1.5">
+        {Icon && <Icon size={12} className={iconColorMap[color]} />}
+        <span className="text-[9px] text-text-secondary">{title}</span>
       </div>
-      <div className="flex items-baseline justify-between mt-1">
-        <div className={`text-xl font-bold ${iconColorMap[color]}`}>{value}</div>
-        {subtitle && <div className="text-[10px] text-text-muted">{subtitle}</div>}
+      <div className="flex items-baseline justify-between mt-0.5">
+        <div className={`text-base font-bold ${iconColorMap[color]}`}>{value}</div>
+        {subtitle && <div className="text-[8px] text-text-muted">{subtitle}</div>}
       </div>
     </div>
   )
